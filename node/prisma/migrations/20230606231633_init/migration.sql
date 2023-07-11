@@ -1,0 +1,36 @@
+-- CreateTable
+CREATE TABLE `User` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `User_email_key`(`email`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `User2` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `name1` VARCHAR(191) NOT NULL,
+    `name2` VARCHAR(191) NOT NULL,
+    `name3` VARCHAR(191) NOT NULL,
+    `name4` VARCHAR(191) NOT NULL,
+    `name5` VARCHAR(191) NOT NULL,
+    `name6` VARCHAR(191) NOT NULL,
+    `name7` VARCHAR(191) NOT NULL,
+    `name8` VARCHAR(191) NOT NULL,
+    `name9` VARCHAR(191) NOT NULL,
+    `name10` VARCHAR(191) NOT NULL,
+    `name11` VARCHAR(191) NOT NULL,
+    `name12` VARCHAR(191) NOT NULL,
+    `name13` VARCHAR(191) NOT NULL,
+    `name14` VARCHAR(191) NOT NULL,
+    `name15` VARCHAR(191) NOT NULL,
+    `name17` VARCHAR(191) NOT NULL,
+    `name18` VARCHAR(191) NOT NULL,
+    `name19` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
