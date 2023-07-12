@@ -1,0 +1,15 @@
+{
+	"name": "xlsx",
+	"version": "1.0.0",
+	"description": "",
+	"main": "src/server.js",
+	"type": "module",
+	"scripts": {
+		"start": "nodemon --inspect=0.0.0.0:9229"
+	},
+	"devDependencies": {},
+	"dependencies": {
+		"exceljs": "^4.3.0",
+		"mariadb": "^3.2.0"
+	}
+}
