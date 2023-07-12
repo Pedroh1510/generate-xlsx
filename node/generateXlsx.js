@@ -2,7 +2,7 @@ import { pipeline } from 'node:stream/promises';
 import XLSX from 'exceljs';
 import { createPool, createConnection } from 'mariadb';
 import { setTimeout } from 'node:timers/promises';
-import { Transform, Writable } from 'node:stream';
+import { Readable, Writable } from 'node:stream';
 
 const pool = createPool({
 	host: 'localhost',
@@ -14,25 +14,28 @@ const pool = createPool({
 	connectTimeout: 1000,
 	initializationTimeout: 1000
 });
+async function getConnection() {
+	return createConnection({
+		allowPublicKeyRetrieval: true,
+		host: 'localhost',
+		user: 'root',
+		password: 'mauFJcuf5dhRMQrjj',
+		database: 'base',
+		timeout: 1000,
+		connectTimeout: 1000,
+		initializationTimeout: 1000
+	});
+}
 async function handleDb(query) {
-	const conn = await pool.getConnection();
+	// const conn = await pool.getConnection();
+	const conn = await getConnection();
 	return conn.query(query);
 }
 async function handleStreamDb(query) {
-	const conn = await pool.getConnection();
-	// const conn = await createConnection({
-	// 	allowPublicKeyRetrieval: true,
-	// 	host: 'localhost',
-	// 	user: 'root',
-	// 	password: 'mauFJcuf5dhRMQrjj',
-	// 	database: 'base',
-	// 	timeout: 1000,
-	// 	connectTimeout: 1000,
-	// 	initializationTimeout: 1000
-	// });
-
-	// return conn.queryStream(query);
-	return conn.queryStream(query).on('close', () => conn.release());
+	// const conn = await pool.getConnection();
+	// return conn.queryStream(query).on('close', () => conn.release());
+	const conn = await getConnection();
+	return conn.queryStream(query);
 }
 async function main() {
 	console.log('Iniciando');
@@ -49,32 +52,35 @@ async function main() {
 }
 main();
 class XlsxWriter extends Writable {
-	constructor(columns, stream) {
+	constructor(columns, stream = new Readable()) {
 		super({ objectMode: true });
 		this.xlsx = new XLSX.stream.xlsx.WorkbookWriter({
-			filename: 'data.xlsx',
+			useStyles: false,
 			useSharedStrings: false,
-			useStyles: true
+			filename: 'data.xlsx'
 		});
 		this.ws = this.xlsx.addWorksheet();
 		this.ws.columns = columns;
 		this.counter = 0;
 		this.stream = stream;
 	}
-	async _write(chunk, enc, cb) {
+	async _write(chunk, _enc, cb) {
 		this.stream.pause();
 		this.counter++;
-		this.ws.addRow(chunk).commit();
-		await setTimeout(1);
-		if (this.counter % 1000 === 0) {
+		this.ws.addRow({ ...chunk }).commit();
+		await setTimeout(50);
+		if (this.counter % 100 === 0) {
 			await setTimeout(100);
 			console.log(this.counter);
 		}
 		this.stream.resume();
 		cb();
 	}
-	async _final(cb) {
-		await this.xlsx.commit();
-		cb(null);
+	_final(cb) {
+		this.ws.commit();
+		this.xlsx
+			.commit()
+			.then(() => cb())
+			.catch(() => cb());
 	}
 }
