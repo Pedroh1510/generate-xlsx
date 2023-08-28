@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 frunk = "0.4.1"
 mysql = "24.0.0"
-simple-xlsx-writer = "0.1.0"
+simple-xlsx-writer = {git = "https://github.com/Pedroh1510/simple-xlsx-writer", branch="master"} 
